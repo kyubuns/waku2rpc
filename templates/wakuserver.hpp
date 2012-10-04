@@ -71,6 +71,7 @@ public:
     }
     catch (std::runtime_error &e) {
       std::cout << "ERROR!: " << e.what() << std::endl;
+      m_con->close(websocketpp::close::status::NORMAL);
     }
     catch (...) {
       std::cout << "parse error" << std::endl;
@@ -161,7 +162,7 @@ private:
       send(sbuf);
     }
     if(m_handshaked == false) {
-      m_con->close(websocketpp::close::status::PROTOCOL_ERROR, "");
+      m_con->close(websocketpp::close::status::PROTOCOL_ERROR);
       return;
     }
 
@@ -200,6 +201,9 @@ public:
     msgpack::unpack(&receive_data, msg->get_payload().c_str(), msg->get_payload().size());
     try {
       m_connections[con]->onmessage(receive_data);
+    }
+    catch (std::runtime_error &e) {
+      std::cout << "ERROR!: on_message - " << e.what() << std::endl;
     }
     catch(...) {
       std::cout << "ERROR!: on_message" << std::endl;
