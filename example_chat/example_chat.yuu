@@ -1,0 +1,27 @@
+Msg :
+ [
+   struct,
+   [name , string],
+   [msg  , string],
+   [dummy, int]
+ ]
+
+chat :
+ [
+   C->S,
+   [msg , Msg],
+ ]
+
+chatNotify :
+ [
+   S->C,
+   [id   , int],
+   [name , string],
+   [msg  , string],
+ ]
+
+info :
+ [
+   S->C,
+   [msg  , string],
+ ]
