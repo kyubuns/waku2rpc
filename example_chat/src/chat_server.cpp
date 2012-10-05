@@ -37,6 +37,14 @@ class client : public wakuserver::connection, public std::enable_shared_from_thi
 int client::id = 0;
 std::set<std::shared_ptr<client>> client::connections;
 
+void settimer(boost::asio::deadline_timer &timer) {
+  timer.expires_from_now(boost::posix_time::seconds(30));
+  timer.async_wait([&timer](const boost::system::error_code &error){
+    std::cout << "on_timer" << std::endl;
+    settimer(timer);
+  });
+}
+
 int main(int argc, char* argv[]) {
   short port = 9003;
 
@@ -55,7 +63,11 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Starting chat server on port " << port << std::endl;
 
-    //boost::asio::io_service &a = endpoint.get_io_service();
+    //timer
+    boost::asio::io_service &io_service = endpoint.get_io_service();
+    boost::asio::deadline_timer timer(io_service);
+    settimer(timer);
+
     endpoint.listen(port);
   } catch (std::exception& e) {
     std::cerr << "Exception: " << e.what() << std::endl;

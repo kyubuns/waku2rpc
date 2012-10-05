@@ -74,6 +74,7 @@ public:
     }
     catch (...) {
       std::cout << "parse error" << std::endl;
+      m_con->close(websocketpp::close::status::PROTOCOL_ERROR);
     }
   }
 
