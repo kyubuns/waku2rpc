@@ -7,6 +7,7 @@
 #include <map>
 #include <msgpack.hpp>
 #include <memory>
+#include <boost/lexical_cast.hpp>
 
 using websocketpp::server;
 
@@ -23,9 +24,7 @@ struct {{struct.name}} {
 
 
 std::string itos(int i) {
-  std::ostringstream s;
-  s << i;
-  return s.str();
+  return boost::lexical_cast<std::string>(i);
 }
 
 template<class T>
@@ -79,9 +78,7 @@ public:
   }
 
   void send(msgpack::sbuffer& sbuf) {
-    //ToDo: sbuffer->stringと送信は分けたい
-    std::string data;
-    for(size_t i=0;i<sbuf.size();++i) data.push_back(sbuf.data()[i]);
+    std::string data(reinterpret_cast<char*>(sbuf.data()), sbuf.size());
     m_con->send(data, websocketpp::frame::opcode::BINARY);
   }
 
@@ -98,7 +95,7 @@ public:
     try {
       {{function.name}}_argtype args;
       obj.convert(&args);
-      {{function.name}}({% for arg in function.args %}args.{{arg.name}}{% if not loop.last %}, {% endif %}{% endfor %});
+      {{function.name}}({% for arg in function.args %}std::move(args.{{arg.name}}){% if not loop.last %}, {% endif %}{% endfor %});
     } catch(...) {
       std::cout << "parse error: {{function.name}}" << std::endl;
     }
