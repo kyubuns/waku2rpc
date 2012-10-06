@@ -23,7 +23,7 @@ struct {{struct.name}} {
 {% endfor %}
 
 
-std::string itos(int i) {
+inline std::string itos(int i) {
   return boost::lexical_cast<std::string>(i);
 }
 
