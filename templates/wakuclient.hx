@@ -107,7 +107,6 @@ class Connection {
       m_socket.onmessage = function(e:{data:ArrayBuffer}):Void {
         try {
           var receive_data:Dynamic = Msgpack.unpack(new Uint8Array(e.data));
-          trace(receive_data);
           if(receive_data.length != 3) return;
 
           var commandNo = {{'receive_data[0]'|cast_hx('Int')}};
@@ -172,8 +171,9 @@ class Connection {
     {% endfor %}
     {{function.name}}({% for arg in function.args %}{{arg.name}}{% if not loop.last %}, {% endif %}{% endfor %});
   }
-  public function {{function.name}}({% for arg in function.args %}{{arg.name}}:{{arg.type}}{% if not loop.last %}, {% endif %}{% endfor %}):Void {}
   {% endfor %}
+  {% for function in StoC %}
+  public function {{function.name}}({% for arg in function.args %}{{arg.name}}:{{arg.type}}{% if not loop.last %}, {% endif %}{% endfor %}):Void {}{% endfor %}
 //====================================================================================
 
 //====================================================================================

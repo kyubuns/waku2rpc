@@ -101,8 +101,10 @@ public:
       std::cout << "parse error: {{function.name}}" << std::endl;
     }
   }
-  virtual void {{function.name}}({% for arg in function.args %}{{arg.type}} {{arg.name}}{% if not loop.last %}, {% endif %}{% endfor %}) {}
   {% endfor %}
+
+  {% for function in CtoS %}
+  virtual void {{function.name}}({% for arg in function.args %}{{arg.type}} {{arg.name}}{% if not loop.last %}, {% endif %}{% endfor %}) {}{% endfor %}
 //====================================================================================
 
 //====================================================================================
