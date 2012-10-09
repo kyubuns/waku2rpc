@@ -1,0 +1,67 @@
+login:
+ [
+  C->S,
+  [name, string],
+  [color, string]
+ ]
+
+Point:
+ [
+  struct,
+  [x, int],
+  [y, int]
+ ]
+
+Char:
+ [
+  struct,
+  [id, int],
+  [name, string],
+  [color, string],
+  [point, Point]
+ ]
+
+loginReply:
+ [
+  S->C,
+  [id, int],
+  [charList, array, Char]
+ ]
+
+loginNotify:
+ [
+  S->C,
+  [status, Char]
+ ]
+
+logoutNotify:
+ [
+  S->C,
+  [id, int]
+ ]
+
+chat:
+ [
+  C->S,
+  [msg, string]
+ ]
+
+chatNotify:
+ [
+  S->C,
+  [id, int],
+  [msg, string]
+ ]
+
+move:
+ [
+  C->S,
+  [to, Point]
+ ]
+
+moveNotify:
+ [
+  S->C,
+  [id, int],
+  [to, Point]
+ ]
