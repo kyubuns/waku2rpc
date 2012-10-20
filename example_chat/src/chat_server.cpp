@@ -5,7 +5,7 @@ using websocketpp::server;
 
 class client : public wakuserver::connection, public std::enable_shared_from_this<client> {
   public:
-    client(server::handler::connection_ptr con) : wakuserver::connection(con) {
+    client(server::handler::connection_ptr con, std::set<std::shared_ptr<client>> &connections) : wakuserver::connection(con), connections(connections) {
       m_id = id++;
     }
     void onopen() {
@@ -29,13 +29,12 @@ class client : public wakuserver::connection, public std::enable_shared_from_thi
 
   private:
     int m_id;
+    std::set<std::shared_ptr<client>> &connections;
 
   private:
     static int id;
-    static std::set<std::shared_ptr<client>> connections;
 };
 int client::id = 0;
-std::set<std::shared_ptr<client>> client::connections;
 
 void settimer(boost::asio::deadline_timer &timer) {
   timer.expires_from_now(boost::posix_time::seconds(30));
@@ -53,7 +52,12 @@ int main(int argc, char* argv[]) {
   }
 
   try {
-    server::handler::ptr handler(new wakuserver::server_handler<client>());
+    std::set<std::shared_ptr<client>> connections;
+    server::handler::ptr handler(new wakuserver::server_handler(
+      [&connections](server::handler::connection_ptr con){
+        return std::make_shared<client>(con, connections);
+      })
+    );
     server endpoint(handler);
 
     endpoint.alog().set_level(websocketpp::log::alevel::CONNECT);

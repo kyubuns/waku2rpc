@@ -180,11 +180,12 @@ private:
   std::map<int, std::function<void(msgpack::object&)>> m_functions;
 };
 
-template<class T>
 class server_handler : public server::handler {
 public:
+  server_handler(std::function<std::shared_ptr<connection>(connection_ptr)> creator) : m_creator(creator){}
+
   void on_open(connection_ptr con) {
-    m_connections.insert(std::make_pair(con, std::make_shared<T>(con)));
+    m_connections.insert(std::make_pair(con, m_creator(con)));
   }
 
   void on_close(connection_ptr con) {
@@ -211,7 +212,8 @@ public:
   }
 
 private:
-  std::map<connection_ptr, std::shared_ptr<T>> m_connections;
+  std::function<std::shared_ptr<connection>(connection_ptr)> m_creator;
+  std::map<connection_ptr, std::shared_ptr<connection>> m_connections;
 };
 
 }
