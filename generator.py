@@ -108,7 +108,7 @@ if __name__ == "__main__":
     output['args'] = tmp
     lists[type].append(output)
 
-  template = env.get_template(os.path.dirname(__file__) + template_filename[filetype])
+  template = env.get_template(os.path.join(os.path.dirname(__file__), template_filename[filetype]))
   f = open(output_filename, 'w')
   f = codecs.lookup('utf_8')[-1](f)
   f.write(template.render(
