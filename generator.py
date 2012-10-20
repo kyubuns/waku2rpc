@@ -1,6 +1,7 @@
 # coding: utf-8
 import yaml
 from jinja2 import FileSystemLoader, Environment
+import os
 import sha
 import sys
 import random
@@ -41,13 +42,12 @@ def to_arg(value):
 
 #main
 if __name__ == "__main__":
-  if len(sys.argv) != 4:
-    print 'usagee python generator.py [yuu_file] [template_file] [output_filename]'
+  if len(sys.argv) != 3:
+    print 'usagee python generator.py [yuu_file] [output_filename]'
     quit(1)
 
   yuu_filename = sys.argv[1]
-  template_filename = sys.argv[2]
-  output_filename = sys.argv[3]
+  output_filename = sys.argv[2]
 
   yuu = yaml.load(open(yuu_filename).read())
   env = Environment(loader=FileSystemLoader("."))
@@ -65,7 +65,7 @@ if __name__ == "__main__":
   lists['struct'] = []
   lists['enum'] = []
 
-  filetype = template_filename.split('.')[1];
+  filetype = output_filename.split('.')[1];
   type_to = {}
   type_to['hpp'] = {
     'int':'int',
@@ -81,6 +81,9 @@ if __name__ == "__main__":
     'string':'String',
     'array':'Array',
   }
+  template_filename = {}
+  template_filename['hpp'] = 'templates/wakuserver.hpp'
+  template_filename['hx'] = 'templates/wakuclient.hx'
 
   #structは先に全部typeにつっこむ
   for name, args in yuu.items():
@@ -105,7 +108,7 @@ if __name__ == "__main__":
     output['args'] = tmp
     lists[type].append(output)
 
-  template = env.get_template(template_filename)
+  template = env.get_template(os.path.dirname(__file__) + template_filename[filetype])
   f = open(output_filename, 'w')
   f = codecs.lookup('utf_8')[-1](f)
   f.write(template.render(

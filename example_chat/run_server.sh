@@ -2,8 +2,8 @@ set -e
 
 echo "==========generate source code=========="
 cd ../
-python generator.py example_chat/example_chat.yuu templates/wakuserver.hpp example_chat/src/waku_server.hpp
-python generator.py example_chat/example_chat.yuu templates/wakuclient.hx example_chat/src/WakuClient.hx
+python generator.py example_chat/example_chat.yuu example_chat/src/waku_server.hpp
+python generator.py example_chat/example_chat.yuu example_chat/src/WakuClient.hx
 
 cd example_chat
 echo "==========build server=========="

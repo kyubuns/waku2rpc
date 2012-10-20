@@ -2,7 +2,7 @@ set -e
 
 echo "==========generate source code=========="
 cd ../
-python generator.py revolution/revolution.yuu templates/wakuclient.hx revolution/src/WakuClient.hx
+python generator.py revolution/revolution.yuu revolution/src/WakuClient.hx
 
 cd revolution
 echo "==========build client=========="
