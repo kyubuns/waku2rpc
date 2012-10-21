@@ -84,9 +84,8 @@ public:
     }
   }
 
-  void send(msgpack::sbuffer& sbuf) {
-    std::string data(reinterpret_cast<char*>(sbuf.data()), sbuf.size());
-    m_con->send(data, websocketpp::frame::opcode::BINARY);
+  void close() {
+    m_con->close(websocketpp::close::status::NORMAL);
   }
 
 //====================================================================================
@@ -144,6 +143,11 @@ public:
 //====================================================================================
 
 private:
+  void send(msgpack::sbuffer& sbuf) {
+    std::string data(reinterpret_cast<char*>(sbuf.data()), sbuf.size());
+    m_con->send(data, websocketpp::frame::opcode::BINARY);
+  }
+
   void handshake_request(msgpack::object &args) {
     std::vector<std::string> argtypes;
     try {
