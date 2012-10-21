@@ -15,6 +15,12 @@ namespace wakuserver {
 
 {% for struct in structs %}
 struct {{struct.name}} {
+  {{struct.name}}() {}
+  {{struct.name}}({% for arg in struct.args %}{% if not loop.first %}, {% endif %}{{arg.type}} {{arg.name}}_{% endfor %}) {
+    {% for arg in struct.args %}
+    {{arg.name}} = {{arg.name}}_;
+    {% endfor %}
+  }
   {% for arg in struct.args %}
   {{arg.type}} {{arg.name}};
   {% endfor %}
