@@ -74,6 +74,13 @@ if __name__ == "__main__":
     'string':'std::string',
     'array':'std::vector',
   }
+  type_to['d'] = {
+    'int':'int',
+    'double':'double',
+    'bool':'bool',
+    'string':'string',
+    'array':'',
+  }
   type_to['hx'] = {
     'int':'Int',
     'double':'Float',
@@ -83,6 +90,7 @@ if __name__ == "__main__":
   }
   template_filename = {}
   template_filename['hpp'] = 'templates/wakuserver.hpp'
+  template_filename['d'] = 'templates/wakuserver.d'
   template_filename['hx'] = 'templates/wakuclient.hx'
 
   #structは先に全部typeにつっこむ
@@ -100,8 +108,10 @@ if __name__ == "__main__":
     random_ids.pop()
     tmp = []
     for arg in args[1:]:
-      if arg[1] == 'array':
-        tmp.append({'name':arg[0], 'type':type_to[filetype]['array']+'<'+type_to[filetype][arg[2]]+'>', 'elementtype':type_to[filetype][arg[2]], 'is_array':True, 'originaltype':arg[2]})
+      if arg[1] == 'array' and filetype == 'hpp':
+        tmp.append({'name':arg[0], 'type':'std::vector<'+type_to[filetype][arg[2]]+'>', 'elementtype':type_to[filetype][arg[2]], 'is_array':True, 'originaltype':arg[2]})
+      elif arg[1] == 'array' and filetype == 'd':
+        tmp.append({'name':arg[0], 'type':type_to[filetype][arg[2]]+'[]', 'elementtype':type_to[filetype][arg[2]], 'is_array':True, 'originaltype':arg[2]})
       else:
         tmp.append({'name':arg[0], 'type':type_to[filetype][arg[1]], 'is_array':False, 'originaltype':arg[1]})
   
